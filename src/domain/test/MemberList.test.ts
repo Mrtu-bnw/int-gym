@@ -13,6 +13,7 @@ describe("MemberList", () => {
       documentId: "12345678",
       plan: "full",
       monthlyFee: 1500,
+      discount:10
     });
   });
 
@@ -34,4 +35,20 @@ describe("MemberList", () => {
     list.add(member);
     expect(list.totalFees()).toBe(1500);
   });
+
+  test("total discounted", () => {
+    list.add(member);
+    expect(list.totalDiscounted()).toBe(1350);
+  });
+
+  test("update a member fee", () => {
+    list.add(member);
+    list.updateFee("12345678", 2000);
+    expect(member.monthlyFee).toBe(2000);
+  });
+
+  test("reject updating a missing member", () => {
+    expect(() => list.updateFee("99999999", 2000)).toThrow();
+  });
+
 });

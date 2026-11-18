@@ -11,6 +11,7 @@ export type MemberData = {
   documentId: string;
   plan: Plan;
   monthlyFee: number;
+  discount: number;
 };
 
 export class Member {
@@ -25,6 +26,7 @@ export class Member {
     this.documentId = data.documentId;
     this.plan = data.plan;
     this.monthlyFee = data.monthlyFee;
+    this.discount = data.discount;
   }
 
   get name(): string {
@@ -77,11 +79,18 @@ export class Member {
     return this._discount;
   }
 
-  set discount(_value: number) {
-    // TODO: validar y guardar el descuento
+  set discount(value: number) {
+    if (!Number.isFinite(value) || value < 0 || value > 100) {
+      throw new Error("El valor debe estar entre 0 y 100.");
+    }
+    this._discount = value;
   }
 
   toString(): string {
+    if (this.discount > 0) {
+      return `${this.name} (doc. ${this.documentId}) - Plan ${PLAN_LABELS[this.plan]} - $${this.monthlyFee} - ${this.discount}%`;
+    }
     return `${this.name} (doc. ${this.documentId}) - Plan ${PLAN_LABELS[this.plan]} - $${this.monthlyFee}`;
   }
+
 }
